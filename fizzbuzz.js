@@ -54,7 +54,8 @@ function fizzbuzz() {
         } else if (commandLineDict.hasOwnProperty(arg)) {
             commandLineDict[arg] = true;
         } else {
-            // exit with error message (only registered arguments allowed!)
+            console.error("Unrecognized argument " + arg);
+            process.exit();
         }
     })
 
