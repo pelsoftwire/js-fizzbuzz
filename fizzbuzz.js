@@ -1,4 +1,3 @@
-// TODO: enable all rules if none are specified
 /*
 
 Command options
@@ -7,13 +6,20 @@ newrule [number] [word] [wipe (optional)] [before (optional)]-[letter]
 
 creates a new rule that, if the number is divisible by [number], print [word] instead. if [wipe] is added, this rule will overwrite all previous rules (similar to 'Bong'). If [before]-[letter] is added, the added word will appear just before the first word beginning with [letter]
 
+As many newrules as required can be stated, but none of the below rules can follow any newrules (newrules must be the final options)
+
+----
+
 3, 5, 7, 11, 13, 17
 
 enables the rules for 3, 5, 7, 1, 13, 17 respectively
 
+----
+
 all
 
 enables all hardcoded rules
+
  */
 
 // TODO: encode current default rules in 'newrule' syntax
@@ -83,13 +89,14 @@ function fizzbuzz() {
 
     // list of all rules (and valid command line arguments)
     var commandLineDict = {
-        3: false,
-        5: false,
-        7: false,
-        11: false,
-        13: false,
-        17: false
+        3: true,
+        5: true,
+        7: true,
+        11: true,
+        13: true,
+        17: true
     }
+    var ruleSpecified = false;
 
     var extraRules = {}
 
@@ -97,6 +104,7 @@ function fizzbuzz() {
     var i = 0;
     while (i < commandLineArgs.length) {
         var arg = commandLineArgs[i];
+
         if (arg === "newrule") {
             var j = i + 1; // this iterator may be redundant
             // create a new rule.
@@ -154,6 +162,12 @@ function fizzbuzz() {
             });
             // cant break out of for loop. I think this is fine, since a forEach is readable and the number of arguments should be low. I also still want to catch unrecognized arguments
         } else if (commandLineDict.hasOwnProperty(arg)) {
+            if (!ruleSpecified) {
+                Object.keys(commandLineDict).forEach(function (key) {
+                    commandLineDict[key] = false;
+                })
+                ruleSpecified = true;
+            }
             commandLineDict[arg] = true;
         } else {
             console.error("Unrecognized argument " + arg);
