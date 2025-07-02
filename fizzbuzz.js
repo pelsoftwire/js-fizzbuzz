@@ -1,14 +1,16 @@
 const readline = require("readline");
 
 // This is our main function
-function genOutput(num) {
+
+// arguments in a dict for efficiency reasons
+function genOutput(num, args) {
     var output = [];
 
-    if (num % 3 === 0) { output.push("Fizz"); }
-    if (num % 5 === 0) { output.push("Buzz"); }
-    if (num % 7 === 0) { output.push("Bang"); }
-    if (num % 11 === 0) { output = ["Bong"]; } // need to add the number back for removeNumber logic
-    if (num % 13 === 0) {
+    if (num % 3 === 0 && args[3]) { output.push("Fizz"); }
+    if (num % 5 === 0 && args[5]) { output.push("Buzz"); }
+    if (num % 7 === 0 && args[7]) { output.push("Bang"); }
+    if (num % 11 === 0 && args[11]) { output = ["Bong"]; } // need to add the number back for removeNumber logic
+    if (num % 13 === 0 && args[13]) {
         let i = output.findIndex(function (x) { return x[0].toLocaleLowerCase() == "b"; })
         if (i === -1) {
             output.unshift("Fezz");
@@ -16,7 +18,7 @@ function genOutput(num) {
             output.splice(i,0, "Fezz");
         }
     }
-    if (num % 17 === 0) {
+    if (num % 17 === 0 && args[17]) {
         output.reverse();
     }
     if (output.length === 0) {
@@ -27,11 +29,41 @@ function genOutput(num) {
 
 }
 
+const reader = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
 function fizzbuzz() {
 
-    for (var i = 1; i <= 255; i++) {
-        console.log(genOutput(i));
+    var commandLineArgs = process.argv.slice(2);
+    var commandLineDict = {
+        3: false,
+        5: false,
+        7: false,
+        11: false,
+        13: false,
+        17: false
     }
+    commandLineArgs.forEach(function (arg) {
+        if (arg === "all") {
+            Object.keys(commandLineDict).forEach(function (key) {
+                commandLineDict[key] = true;
+            });
+            // cant put break here for some reason
+        } else if (commandLineDict.hasOwnProperty(arg)) {
+            commandLineDict[arg] = true;
+        } else {
+            // exit with error message (only registered arguments allowed!)
+        }
+    })
+
+    reader.question("Please enter a number >> ", function(x) {
+        for (var i = 1; i <= x; i++) {
+            console.log(genOutput(i, commandLineDict));
+        };
+        reader.close();
+    });
 
 }
 
