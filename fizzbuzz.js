@@ -32,6 +32,7 @@ function genOutput(num, args) {
 
 }
 
+// readline module
 const reader = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -40,6 +41,8 @@ const reader = readline.createInterface({
 function fizzbuzz() {
 
     var commandLineArgs = process.argv.slice(2);
+
+    // list of all rules (and valid command line arguments)
     var commandLineDict = {
         3: false,
         5: false,
@@ -48,6 +51,8 @@ function fizzbuzz() {
         13: false,
         17: false
     }
+
+    // convert list into a dict for efficiency reasons
     commandLineArgs.forEach(function (arg) {
         if (arg === "all") {
             Object.keys(commandLineDict).forEach(function (key) {
@@ -65,7 +70,7 @@ function fizzbuzz() {
     reader.question("Please enter a number >> ", function(x) {
         for (var i = 1; i <= x; i++) {
             console.log(genOutput(i, commandLineDict));
-        };
+        }
         reader.close();
     });
 
