@@ -6,6 +6,7 @@ const readline = require("readline");
 function genOutput(num, args) {
     var output = [];
 
+    // --- RULES ---
     if (num % 3 === 0 && args[3]) { output.push("Fizz"); }
     if (num % 5 === 0 && args[5]) { output.push("Buzz"); }
     if (num % 7 === 0 && args[7]) { output.push("Bang"); }
@@ -21,6 +22,8 @@ function genOutput(num, args) {
     if (num % 17 === 0 && args[17]) {
         output.reverse();
     }
+
+    // --- OUTPUT ---
     if (output.length === 0) {
         return num.toString();
     } else {
@@ -50,7 +53,7 @@ function fizzbuzz() {
             Object.keys(commandLineDict).forEach(function (key) {
                 commandLineDict[key] = true;
             });
-            // cant put break here for some reason
+            // cant break out of for loop. I think this is fine, since a forEach is readable and the number of arguments should be low. I also still want to catch unrecognized arguments
         } else if (commandLineDict.hasOwnProperty(arg)) {
             commandLineDict[arg] = true;
         } else {
