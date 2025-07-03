@@ -24,48 +24,36 @@ enables all hardcoded rules
 
 // TODO: encode current default rules in 'newrule' syntax
 
+const Rule = require("./Rule");
+
 const readline = require("readline");
 
 // This is our main function
+
+// base rules
+rule3 = new Rule("Fizz", undefined, false, 3);
+rule5 = new Rule("Buzz", undefined, false, 5);
+rule7 = new Rule("Bang", undefined, false, 7);
+rule11 = new Rule("Bong", undefined, true, 11);
+rule13 = new Rule("Fezz", "b", false, 13);
 
 // arguments in a dict for efficiency reasons
 function genOutput(num, args, extraRules = {}) {
     var output = [];
 
     // --- RULES ---
-    if (num % 3 === 0 && args[3]) { output.push("Fizz"); }
-    if (num % 5 === 0 && args[5]) { output.push("Buzz"); }
-    if (num % 7 === 0 && args[7]) { output.push("Bang"); }
-    if (num % 11 === 0 && args[11]) { output = ["Bong"]; } // need to add the number back for removeNumber logic
-    if (num % 13 === 0 && args[13]) {
-        let i = output.findIndex(function (x) { return x[0].toLocaleLowerCase() == "b"; })
-        if (i === -1) {
-            output.unshift("Fezz");
-        } else {
-            output.splice(i,0, "Fezz");
-        }
-    }
+    if (num % 3 === 0 && args[3]) { rule3.apply(output); }
+    if (num % 5 === 0 && args[5]) { rule5.apply(output); }
+    if (num % 7 === 0 && args[7]) { rule7.apply(output); }
+    if (num % 11 === 0 && args[11]) { rule11.apply(output); } // need to add the number back for removeNumber logic
+    if (num % 13 === 0 && args[13]) { rule13.apply(output) }
     if (num % 17 === 0 && args[17]) {
         output.reverse();
     }
 
     // --- NEW RULES ---
     for (const [key, rule] of Object.entries(extraRules)) {
-        if (num % key === 0) {
-            if (rule.wipe) {
-                output = [rule.word]
-            } else if (rule.before) {
-                // this is duplicated code
-                let i = output.findIndex(function (x) { return x[0].toLocaleLowerCase() == rule.before.toLocaleLowerCase(); });
-                if (i === -1) {
-                    output.unshift(rule.word);
-                } else {
-                    output.splice(i,0, rule.word);
-                }
-            } else {
-                output.push(rule.word);
-            }
-        }
+        if (num % key === 0) { rule.apply(output); }
     }
 
     // --- OUTPUT ---
@@ -153,7 +141,7 @@ function fizzbuzz() {
                 process.exit();
             }
 
-            extraRules[divisor] = newRule;
+            extraRules[divisor] = new Rule(newRule.word, newRule.before, newRule.wipe, divisor);
 
             i = j-1;
         } else if (arg === "all") {
