@@ -170,8 +170,9 @@ function fizzbuzz() {
             }
             commandLineDict[arg] = true;
         } else {
-            console.error("Unrecognized argument " + arg);
-            process.exit();
+            // TODO: Ask nat about how to deal with this breaking jest when jest is called with its own arguments
+            //console.error("Unrecognized argument " + arg);
+            //process.exit();
         }
         i++;
     }
@@ -188,3 +189,4 @@ function fizzbuzz() {
 // Now, we run the main function:
 fizzbuzz();
 
+module.exports = genOutput;
